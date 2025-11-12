@@ -151,12 +151,21 @@ def init_db():
     conn.close()
 
 def log_action(username, action, target_table="", target_id="", details=""):
+    import json
+    if isinstance(details, (dict, list)):
+        try:
+            details = json.dumps(details, ensure_ascii=False)
+        except Exception:
+            details = str(details)
     conn = get_conn()
     cur = conn.cursor()
-    cur.execute("INSERT INTO action_logs(id,username,action,target_table,target_id,details,created_at) VALUES (?,?,?,?,?,?,?)",
-                (str(uuid.uuid4()), username, action, target_table, target_id, details, datetime.utcnow().isoformat()))
+    cur.execute(
+        "INSERT INTO action_logs(id,username,action,target_table,target_id,details,created_at) VALUES (?,?,?,?,?,?,?)",
+        (str(uuid.uuid4()), username, action, target_table, target_id, details, datetime.utcnow().isoformat())
+    )
     conn.commit()
     conn.close()
+
 
 # ------------------ 用户 / 客户 操作 ------------------
 def auth_user(username, password):
@@ -599,3 +608,4 @@ if role == "admin":
         st.dataframe(logs, use_container_width=True)
 
 # end
+
