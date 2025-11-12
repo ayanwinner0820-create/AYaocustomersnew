@@ -1,0 +1,9 @@
+streamlit>=1.30
+pandas
+altair
+openpyxl
+xlsxwriter
+python-dateutil
+requests
+sqlalchemy
+schedule
